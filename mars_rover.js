@@ -9,24 +9,18 @@ const MOVEMENT = {
 let rover = {
     direction : "N",
     x : 0,
-    y : 0
+    y : 0,
+    travelLog : [{x : 0 , y : 0}]
 };
 
-//turnLeft(rover);
-//turnRight(rover);
-
-// turnRight(rover);
-// moveForward(rover);
-// turnRight(rover);
-// moveForward(rover);
-
 processCommandsForRover("rffrfflfrff", rover);
+printTravelLog(rover);
 
 
 // ======================
 function turnLeft(rover){
   
-    console.log("turnLeft was called!");
+    console.log("turnLeft called!");
     let indexRoverDirection = DIRECTIONS.lastIndexOf(rover.direction);
     rover.direction = DIRECTIONS[indexRoverDirection - 1];
     console.log(rover.direction)
@@ -35,7 +29,7 @@ function turnLeft(rover){
   
   function turnRight(rover){
     
-    console.log("turnRight was called!");
+    console.log("turnRight called!");
     let indexRoverDirection = DIRECTIONS.indexOf(rover.direction);
     rover.direction = DIRECTIONS[indexRoverDirection + 1];
     console.log(rover.direction)
@@ -44,11 +38,13 @@ function turnLeft(rover){
   
   function moveForward(rover){
     
-    console.log("moveForward was called")
+    console.log("moveForward called")
     let movement = MOVEMENT[rover.direction];
     rover.x += movement.x;
     rover.y += movement.y;
-    console.log(rover.x + " " +rover.y);
+    rover.travelLog.push({x : rover.x , y : rover.y});
+    
+    console.log("Actual position: " + rover.x + " " +rover.y);
     
   }
   
@@ -69,4 +65,10 @@ function turnLeft(rover){
       
       console.log("Processed " + commandList[i]);
     }
+  }
+
+  function printTravelLog(rover){
+    console.log("Travel Log: ");
+      for(let i = 0; i < rover.travelLog.length; i++)
+        console.log(rover.travelLog[i].x + " " + rover.travelLog[i].y);
   }
