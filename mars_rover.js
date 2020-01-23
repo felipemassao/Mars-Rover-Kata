@@ -4,7 +4,7 @@
 const DIRECTIONS = ["N", "E", "S", "W", "N"];
 
 let rover = {
-    direction = "N"
+    direction : "N"
 };
 
 
