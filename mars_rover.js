@@ -13,7 +13,8 @@ let rover = {
     travelLog : [{x : 0 , y : 0}]
 };
 
-processCommandsForRover("rffrfflfrff", rover);
+// processCommandsForRover("rffrfflfrff", rover);
+processCommandsForRover("fffff", rover);
 printTravelLog(rover);
 
 
@@ -42,9 +43,16 @@ function turnLeft(rover){
     let movement = MOVEMENT[rover.direction];
     rover.x += movement.x;
     rover.y += movement.y;
-    rover.travelLog.push({x : rover.x , y : rover.y});
     
-    console.log("Actual position: " + rover.x + " " +rover.y);
+    if(10 > rover.x && rover.x > 0 && 10 > rover.y && rover.y > 0){
+      rover.travelLog.push({x : rover.x , y : rover.y});  
+    } else {
+      rover.x -= movement.x;
+      rover.y -= movement.y;
+      console.log("Can't move: movement will get rover out of bounds");
+    }
+    
+    console.log("Actual position: " + rover.x + " " + rover.y);
     
   }
   
