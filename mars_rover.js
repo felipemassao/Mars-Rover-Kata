@@ -6,28 +6,27 @@ const MOVEMENT = {
   W : {x: -1, y: 0}
 };
 
-let rover = {
-    direction : "N",
-    x : 0,
-    y : 0,
-    travelLog : [{x : 0 , y : 0}]
-};
-
 let grid = [];
 initializeGrid(grid);
 
-grid[3][0] = "O";
-grid[2][1] = "O";
-grid[0][4] = "O";
+// add obstacles here
 
-// printGrid(grid);
+grid[3][0] = "X";
+grid[2][1] = "X";
+grid[0][4] = "X";
 
-// processCommandsForRover("rffrfflfrff", rover);
-// processCommandsForRover("rfbbffrffrbbb", rover);
-// processCommandsForRover("zzzzrff", rover);
-processCommandsForRover("rfffffbbbbbb", rover);
+let rovers = []
+initilizeRovers(grid, rovers);
 
-printTravelLog(rover);
+printGrid(grid); // print initial grid configuration
+
+processCommandsForRovers("rfffffbbbbbb", rovers); // issue comands here
+
+for(let i = 0; i < 3; i++){
+  printTravelLog(rovers[i], i);
+}
+
+printGrid(grid); // print final grid configuration
 
 // ======================
 
@@ -37,6 +36,29 @@ function initializeGrid(grid){
     for(let j = 0; j < 10; j++){
       grid[i].push("_");
     }
+  }
+}
+
+function initilizeRovers(grid, rovers){
+  for(let i = 0; i < 3; i++){
+    let randomPosition;
+    
+    do{
+      randomPosition = { 
+        x : Math.floor(10 * Math.random()),
+        y : Math.floor(10 * Math.random())
+      };
+      // console.log(randomPosition);
+    }while(grid[randomPosition.x][randomPosition.y] !== "_");
+    
+    rovers.push({
+      direction : "N",
+      x : randomPosition.x,
+      y : randomPosition.y,
+      travelLog : [randomPosition]
+    });
+    
+    grid[randomPosition.x][randomPosition.y] = `${i}`;
   }
 }
 
@@ -90,32 +112,39 @@ function move(rover, directionMultiplier){
   console.log("Actual position: " + rover.x + " " + rover.y);
 }
   
-function processCommandsForRover(commandList, rover){
+function processCommandsForRovers(commandList, rovers){
+  
+  let roverIndex = 0;
   
   for(let i = 0; i < commandList.length; i++){
-      
+    
+    console.log("Rover number " + roverIndex);
     switch(commandList[i]){
       case "f":
-        move(rover, 1);
+        move(rovers[roverIndex], 1);
         break;
       case "b":
-        move(rover, -1);
+        move(rovers[roverIndex], -1);
         break;
       case "r":
-        turnRight(rover);
+        turnRight(rovers[roverIndex]);
         break;
       case "l":
-        turnLeft(rover);
+        turnLeft(rovers[roverIndex]);
         break;
+    }
+    
+    roverIndex++;
+    if(roverIndex >= rovers.length){
+      roverIndex = 0;
     }
       
     console.log("Processed " + commandList[i]);
   }
 }
 
-function printTravelLog(rover){
-  console.log("Travel Log: ");
+function printTravelLog(rover, number){
+  console.log(`Travel log for rover number ${number}: `);
     for(let i = 0; i < rover.travelLog.length; i++)
       console.log(rover.travelLog[i].x + " " + rover.travelLog[i].y);
 }
-
