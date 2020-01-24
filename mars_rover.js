@@ -13,14 +13,39 @@ let rover = {
     travelLog : [{x : 0 , y : 0}]
 };
 
+let grid = [];
+initializeGrid(grid);
+
+grid[3][0] = "O";
+grid[2][1] = "O";
+grid[0][4] = "O";
+
+// printGrid(grid);
+
 // processCommandsForRover("rffrfflfrff", rover);
 // processCommandsForRover("rfbbffrffrbbb", rover);
-processCommandsForRover("zzzzrff", rover);
+// processCommandsForRover("zzzzrff", rover);
+processCommandsForRover("rfffffbbbbbb", rover);
 
 printTravelLog(rover);
 
-
 // ======================
+
+function initializeGrid(grid){
+  for(let i = 0; i < 10; i++){
+    grid.push([]);
+    for(let j = 0; j < 10; j++){
+      grid[i].push("_");
+    }
+  }
+}
+
+function printGrid(grid){
+  for(let i = 0; i < 10; i++){
+    console.log(grid[i]);
+  }
+}
+
 function turnLeft(rover){
   
   console.log("turnLeft called!");
@@ -40,27 +65,33 @@ function turnRight(rover){
 }
   
 function move(rover, directionMultiplier){
-    
+  
   console.log("move called, direction: " + directionMultiplier)
   let movement = MOVEMENT[rover.direction];
   rover.x += directionMultiplier * movement.x;
   rover.y += directionMultiplier * movement.y;
-    
-  console.log("Debbugging: " + rover.x + " " + rover.y);
-    
-  if(10 >= rover.x && rover.x >= 0 && 10 >= rover.y && rover.y >= 0){
-    rover.travelLog.push({x : rover.x , y : rover.y});  
+  
+  let canMove = true;
+  if(10 < rover.x || rover.x < 0 || 10 < rover.y || rover.y < 0){
+    console.log("Can't move: movement will get rover out of bounds");
+    canMove = false;
+  } else if (grid[rover.x][rover.y] !== "_"){
+    console.log("Can't move: there is an obstacle");
+    canMove = false;
+  }
+  
+  if(canMove === true){
+    rover.travelLog.push({x : rover.x , y : rover.y});
   } else {
     rover.x -= directionMultiplier * movement.x;
     rover.y -= directionMultiplier * movement.y;
-    console.log("Can't move: movement will get rover out of bounds");
   }
     
   console.log("Actual position: " + rover.x + " " + rover.y);
-    
 }
   
 function processCommandsForRover(commandList, rover){
+  
   for(let i = 0; i < commandList.length; i++){
       
     switch(commandList[i]){
